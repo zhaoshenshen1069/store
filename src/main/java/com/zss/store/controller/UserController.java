@@ -45,4 +45,15 @@ public class UserController extends BaseController {
         //将以上返回值和状态码OK封装到响应结果中并返回
         return new JsonResult<>(OK,data);
     }
+
+    @RequestMapping("change_password")
+    public JsonResult<Void> changePassword(String oldPassword,String newPassword,HttpSession session){
+        //调用session.getAttribute("")获取uid和username
+        Integer uid = getUidFromSession(session);
+        String username = getUsernameFromSession(session);
+        //调用业务对象执行修改密码
+        userService.changePassword(uid,username,oldPassword,newPassword);
+        //返回成功
+        return new JsonResult<>(OK);
+    }
 }

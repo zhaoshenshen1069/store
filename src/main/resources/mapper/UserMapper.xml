@@ -44,4 +44,31 @@
         where
         username = #{username}
     </select>
+
+    <!--
+        根据uid更新用户的密码：
+        Integer updatePasswordByUid(
+            @Param("uid") Integer uid,
+            @Param("password") String password,
+            @Param("modifiedUser") String modifiedUser,
+            @Param("modifiedTime")Date modifiedTime);
+    -->
+    <update id="updatePasswordByUid">
+        update t_user
+        set
+        password = #{password},
+        modified_user = #{modifiedUser},
+        modified_time = #{modifiedTime}
+        where
+        uid = #{uid}
+    </update>
+
+    <!--根据用户id查询用户数据：User findByUid(Integer uid);-->
+    <select id="findByUid" resultMap="UserEntityMap">
+        select *
+        from
+        t_user
+        where
+        uid = #{uid}
+    </select>
 </mapper>
