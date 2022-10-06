@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @author ：zss
  * @description：TODO
@@ -30,5 +32,17 @@ public class UserController extends BaseController {
         userService.reg(user);
         //返回
         return new JsonResult<>(OK);
+    }
+
+    @RequestMapping("login")
+    public JsonResult<User> login(String username, String password, HttpSession session){
+        //调用业务对象的方法执行登录，并获取返回值
+        User data = userService.login(username, password);
+
+        //登录成功后，将uid和username存入到HttpSession中
+        session.setAttribute("uid",data.getUid());
+        session.setAttribute("username",data.getUsername());
+        //将以上返回值和状态码OK封装到响应结果中并返回
+        return new JsonResult<>(OK,data);
     }
 }

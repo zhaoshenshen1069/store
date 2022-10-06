@@ -1,11 +1,11 @@
 package com.zss.store.controller;
 
-import com.zss.store.service.ex.InsertException;
-import com.zss.store.service.ex.ServiceException;
-import com.zss.store.service.ex.UsernameDuplicateException;
+import com.zss.store.service.ex.*;
 import com.zss.store.util.JsonResult;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author ：zss
@@ -23,9 +23,31 @@ public class BaseController {
         JsonResult<Void> result = new JsonResult<>(e);
         if (e instanceof UsernameDuplicateException){
             result.setState(4000);
+        } else if (e instanceof UserNotFoundException){
+            result.setState(4001);
+        } else if (e instanceof PasswordNotMatchException){
+            result.setState(4002);
         } else if (e instanceof InsertException){
             result.setState(5000);
         }
         return result;
+    }
+
+    /**
+     * 从HttpSession对象中获取uid
+     * @param session HttpSession对象
+     * @return 当前登录的用户的id
+     */
+    protected final Integer getUidFromSession(HttpSession session){
+        return Integer.valueOf(session.getAttribute("uid").toString());
+    }
+
+    /**
+     * 从HttpSession对象中获取用户名
+     * @param session HttpSession对象
+     * @return 当前登录的用户名
+     */
+    protected final String getUsernameFromSession(HttpSession session){
+        return session.getAttribute("username").toString();
     }
 }
